@@ -18,13 +18,13 @@
                 <!-- меню сайта -->
                 <a class="navbar-brand" href="#">WebLabsV02</a>
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link active" href="#">Лб 1</a>
-                    <a class="nav-item nav-link" href="#">Каталог</a>
-                    <a class="nav-item nav-link" href="#">Администрирование</a>
+                    <a class="nav-item nav-link" asp-controller="Home" asp-action="Index">Лб1</a>
+                    <a class="nav-item nav-link" asp-controller="Product" asp-action="Index">Каталог</a>
+                    <a class="nav-item nav-link" asp-area="Admin" asp-page="/Index">Администрирование</a>
                 </div>
                 <!-- меню сайта - конец -->
                 <!-- Информация пользователя -->
-                <a href="#" class="navbar-text ms-auto">
+                <a class="nav-item nav-link navbar-text ms-auto" asp-controller="Cart" asp-action="Index">
                     00,0 руб 
                     <i class="fa-solid fa-cart-shopping"></i> (0)
                 </a>
@@ -49,7 +49,7 @@
                     <li>
                         <form id="logoutForm" class="form-inline">
                             <button id="logout" type="submit" class="nav-link
-                            btn btn-link text-dark">Logout</button>
+                            btn btn-link text-dark" asp-controller="Account" asp-action="LogOut">Logout</button>
                         </form>
                     </li>
                 </ul>

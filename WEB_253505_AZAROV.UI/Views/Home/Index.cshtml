@@ -1,15 +1,15 @@
-﻿@{
+﻿@* @{
     ViewBag.Title = "Index";
-}
+} *@
 <main class="container">
-    <h1>Лабораторная работа 1</h1>
+    @using Microsoft.AspNetCore.Mvc.ViewFeatures;
+    <h1>@ViewData["Title"]</h1>
     <h2>Список</h2>
     <ol type="A">
-        <li>элемент 0 списка</li>
-        <li>элемент 1 списка</li>
-        <li>элемент 2 списка</li>
-        <li>элемент 3 списка</li>
-        <li>элемент 4 списка</li>
+        @for (int i = 0; i < 5; i++)
+        {
+            <li>Элемент @i списка</li>
+        }
     </ol>
     <hr/>
    <form>
