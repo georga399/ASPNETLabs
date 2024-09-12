@@ -1,54 +1,49 @@
-﻿@* @{
-    ViewBag.Title = "Index";
-} *@
-<main class="container">
-    @using Microsoft.AspNetCore.Mvc.ViewFeatures;
-    <h1>@ViewData["Title"]</h1>
-    <h2>Список</h2>
-    <ol type="A">
-        @for (int i = 0; i < 5; i++)
-        {
-            <li>Элемент @i списка</li>
-        }
-    </ol>
-    <hr/>
-   <form>
-        <h2>Форма</h2>
-        <div>
-            <label>
-                <input type="checkbox" name="checkbox1" value="false">
-                Чек-бокс 1
-            </label>
-            <br/>
-            <label>
-                <input type="checkbox" name="checkbox2" value="false">
-                Чек-бокс 2
-            </label>
-            <br/>
-        </div>
-        <div>
-            <label>
-                <input type="radio" name="radio1" value="1" />
-                Радио 1
-            </label>
-            <label>
-                <input type="radio" name="radio2" value="2" />
-                Радио 2
-            </label>
-            <label>
-                <input type="radio" name="radio3" value="3" />
-                Радио 3
-            </label>
-            <br/>
-        </div>
-        <div>
-            <label for="username">Логин:</label>
-            <input type="text" id="username" name="username" />
-        </div>
-        <div>
-            <label for="pass">Пароль:</label>
-            <input type="password" id="pass" name="password" minlength="8" required />
-        </div>
-        <input type="submit" value="Отправить" formmethod="post" />
-    </form> 
-</main>
+﻿@using Microsoft.AspNetCore.Mvc.ViewFeatures;
+<h1>@ViewData["Title"]</h1>
+<h2>Список</h2>
+<ol type="A">
+    @for (int i = 0; i < 5; i++)
+    {
+        <li>Элемент @i списка</li>
+    }
+</ol>
+<hr/>
+<form>
+    <h2>Форма</h2>
+    <div>
+        <label>
+            <input type="checkbox" name="checkbox1" value="false">
+            Чек-бокс 1
+        </label>
+        <br/>
+        <label>
+            <input type="checkbox" name="checkbox2" value="false">
+            Чек-бокс 2
+        </label>
+        <br/>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="radio1" value="1" />
+            Радио 1
+        </label>
+        <label>
+            <input type="radio" name="radio2" value="2" />
+            Радио 2
+        </label>
+        <label>
+            <input type="radio" name="radio3" value="3" />
+            Радио 3
+        </label>
+        <br/>
+    </div>
+    <div>
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="username" />
+    </div>
+    <div>
+        <label for="pass">Пароль:</label>
+        <input type="password" id="pass" name="password" minlength="8" required />
+    </div>
+    <input type="submit" value="Отправить" formmethod="post" />
+</form> 
