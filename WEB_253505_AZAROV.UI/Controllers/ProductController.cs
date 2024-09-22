@@ -6,15 +6,14 @@ public class ProductController : Controller
 {
     private readonly IProductService _productService;
     private readonly ICategoryService _categoryService;
-    private readonly List<Category> _categories;
     public ProductController(IProductService productService, ICategoryService categoryService) 
     {
         _productService = productService;
         _categoryService = categoryService;
-        _categories = _categoryService.GetCategoryListAsync().Result.Data!;
     }
     public async Task<ActionResult> Index([FromQuery] string? category, [FromQuery] int pageNo = 1)
     {
+        var _categories = _categoryService.GetCategoryListAsync().Result.Data!;
         var productResponse =
             await _productService.GetProductListAsync(category, pageNo);
         if(!productResponse.Successfull)

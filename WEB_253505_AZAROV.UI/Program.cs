@@ -1,8 +1,18 @@
+using WEB_253505_AZAROV.UI.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+URIData.APIURI = builder.Configuration["UriData:ApiUri"]!;
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.RegisterCustomServices();
+builder.Services
+    .AddHttpClient<IProductService, APIProductService>(opt=>
+            opt.BaseAddress=new Uri(URIData.APIURI));
+builder.Services
+    .AddHttpClient<ICategoryService, APICategoryService>(opt=>
+            opt.BaseAddress=new Uri(URIData.APIURI));
 
 var app = builder.Build();
 

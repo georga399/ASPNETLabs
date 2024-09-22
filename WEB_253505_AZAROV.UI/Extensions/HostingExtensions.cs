@@ -4,7 +4,7 @@ public static class HostingExtensions
     public static void RegisterCustomServices(
                             this WebApplicationBuilder builder)
     {
-        builder.Services.AddTransient<ICategoryService, MemoryCategoryService>();
-        builder.Services.AddScoped<IProductService, MemoryProductService>();
+        builder.Services.AddTransient<ICategoryService, APICategoryService>();
+        builder.Services.AddScoped<IProductService, APIProductService>();
     }
 }

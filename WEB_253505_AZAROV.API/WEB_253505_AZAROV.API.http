@@ -1,0 +1,6 @@
+@WEB_253505_AZAROV.API_HostAddress = http://localhost:5148
+
+GET {{WEB_253505_AZAROV.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
