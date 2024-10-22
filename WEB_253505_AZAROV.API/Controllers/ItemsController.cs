@@ -18,8 +18,8 @@ public class ItemsController : ControllerBase
     [HttpGet]
     [HttpGet("{category}")]
     public async Task<ActionResult<IEnumerable<Item>>> GetItems(string? category,
-                                            int pageNo = 1,
-                                            int pageSize = 3)
+                                            [FromQuery] int pageNo = 1,
+                                            [FromQuery] int pageSize = 3)
     {
         return Ok(await _productService.GetProductListAsync(
                                             category,

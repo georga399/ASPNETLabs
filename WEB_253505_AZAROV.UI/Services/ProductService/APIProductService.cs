@@ -54,21 +54,31 @@ public class APIProductService : IProductService
         // подготовка URL запроса
         var urlString
             = new StringBuilder($"{_httpClient.BaseAddress!.AbsoluteUri}items/");
-        // добавить категорию в маршрут
-        if (categoryNormalizedName != null)
+        // Добавить категорию в маршрут, если она указана
+        if (!string.IsNullOrEmpty(categoryNormalizedName))
         {
             urlString.Append($"{categoryNormalizedName}/");
-        };
-        // добавить номер страницы в маршрут
+        }
+
+        // Добавить параметры страницы в строку запроса
+        var queryParams = new List<string>();
+        
         if (pageNo > 1)
         {
-            urlString.Append($"page{pageNo}");
-        };
-        // добавить размер страницы в строку запроса
-        if (!_pageSize!.Equals("3"))
-        {
-            urlString.Append(QueryString.Create("pageSize", _pageSize));
+            queryParams.Add($"pageNo={pageNo}");
         }
+        
+        if (_pageSize != "3") // Используем значение по умолчанию
+        {
+            queryParams.Add($"pageSize={_pageSize}");
+        }
+        
+        // Если есть параметры, добавляем их к URL
+        if (queryParams.Count > 0)
+        {
+            urlString.Append("?" + string.Join("&", queryParams));
+        }
+        
         // отправить запрос к API
         var response = await _httpClient.GetAsync(
             new Uri(urlString.ToString()));
