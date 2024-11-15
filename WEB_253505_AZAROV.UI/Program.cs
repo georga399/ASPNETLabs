@@ -1,4 +1,5 @@
 using WEB_253505_AZAROV.UI.Services;
+using WEB_253505_AZAROV.UI.Services.FileService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,12 +8,14 @@ URIData.APIURI = builder.Configuration["UriData:ApiUri"]!;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.RegisterCustomServices();
+builder.Services.AddRazorPages();
 builder.Services
     .AddHttpClient<IProductService, APIProductService>(opt=>
             opt.BaseAddress=new Uri(URIData.APIURI));
 builder.Services
     .AddHttpClient<ICategoryService, APICategoryService>(opt=>
             opt.BaseAddress=new Uri(URIData.APIURI));
+builder.Services.AddHttpClient<IFileService, APIFileService>(opt =>opt.BaseAddress = new Uri($"{URIData.APIURI}Files"));
 
 var app = builder.Build();
 
@@ -34,5 +37,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapRazorPages();
 
 app.Run();

@@ -106,7 +106,7 @@ public class DbInitializer
                 new Item 
                 {
                     Name="Fitbit Versa 3",
-                    Description="Умные часы с функциями отслеживания здоровья и физической активности.",
+                    Description="Умные часы с функциями отслеживания здоровья.",
                     Cost=229,
                     ImageURI=$"{baseUrl}/images/fitbitversa3.png",
                     CategoryId=dbContext.Categories.FirstOrDefault(c => c.NormalizedName.Equals("watches"))!.Id

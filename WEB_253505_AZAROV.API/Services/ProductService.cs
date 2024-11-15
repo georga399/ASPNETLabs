@@ -28,14 +28,17 @@ public class ProductService : IProductService
 
     public async Task DeleteProductAsync(int id)
     {
-        var product = await _context.Items.FindAsync(id);
+        var product = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         if (product != null)
+        {
             _context.Items.Remove(product);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<ResponseData<Item>> GetProductByIdAsync(int id)
     {
-        var product = await _context.Items.FindAsync(id);
+        var product = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         if (product == null)
         {
             return ResponseData<Item>.Error("Product not found.");
@@ -114,6 +117,8 @@ public class ProductService : IProductService
         existingProduct.Description = product.Description;
         existingProduct.Cost = product.Cost;
         existingProduct.CategoryId = product.CategoryId;
+        existingProduct.ImageURI = product.ImageURI;
+        _context.Entry(existingProduct).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 }

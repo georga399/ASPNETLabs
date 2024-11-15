@@ -1,0 +1,57 @@
+﻿@page
+@model WEB_253505_AZAROV.UI.Areas.Admin.Pages.EditModel
+@{
+  ViewData["Title"] = "Edit";
+}
+<h1>Редактировать устройство</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Item.Id" />
+            <input type="hidden" asp-for="Item.ImageURI" />
+            <div class="form-group">
+                <label asp-for="Item.Name" class="control-label">Название</label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.Description" class="control-label">Описание</label>
+                <input asp-for="Item.Description" class="form-control" />
+                <span asp-validation-for="Item.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.CategoryId" class="control-label">Категория</label>
+                <select asp-for="Item.CategoryId" class="form-control" asp-items="@Model.Categories"></select>
+                <span asp-validation-for="Item.CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.Cost" class="control-label">Цена</label>
+                <input asp-for="Item.Cost" class="form-control" />
+                <span asp-validation-for="Item.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="@Model.Image" class="control-label">Новое изображение</label>
+                <input asp-for="@Model.Image" type="file" class="form-control" />
+                <span asp-validation-for="@Model.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <h4 class="row">Текущее изображение</h4>
+        <img src="@Model.Item.ImageURI" style="max-height:200px;" />
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Вернуться к списку устройств</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

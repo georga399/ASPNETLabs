@@ -1,0 +1,51 @@
+﻿@page
+@model WEB_253505_AZAROV.UI.Areas.Admin.Pages.CreateModel
+@{
+  ViewData["Title"] = "Create";
+}
+<h1>Добавить устройство</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Item.Name" class="control-label">Название</label>
+                <input asp-for="Item.Name" class="form-control" />
+                <span asp-validation-for="Item.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.Description" class="control-label">Описание</label>
+                <input asp-for="Item.Description" class="form-control" />
+                <span asp-validation-for="Item.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.CategoryId" class="control-label">Категория</label>
+                <select asp-for="Item.CategoryId" class ="form-control" asp-items="@Model.Categories"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Item.Cost" class="control-label">Цена</label>
+                <input asp-for="Item.Cost" class="form-control" />
+                <span asp-validation-for="Item.Cost" class="text-danger"></span>
+            </div>
+            <div class="form-group mb-3">
+                <label asp-for="@Model.Image" class="control-label">Изображение</label>
+                <input asp-for="@Model.Image" type="file" class="form-control" />
+                <span asp-validation-for="@Model.Image" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    Добавить
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index" class="mb-3">Вернуться к списку устройств</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

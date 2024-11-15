@@ -1,0 +1,49 @@
+﻿@page
+@model WEB_253505_AZAROV.UI.Areas.Admin.Pages.DeleteModel
+@{
+  ViewData["Title"] = "Delete";
+}
+<h1>Удалить устройство</h1>
+
+<h3>Вы уверены, что хотите удалить это устройство?</h3>
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            Название
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Item.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Описание
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Item.Description)
+        </dd>
+        <dt class="col-sm-2">
+            Категория
+        </dt>
+        <dd class="col-sm-10">
+            @Model.Category?.Name
+        </dd>
+        <dt class="col-sm-2">
+            Цена
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Item.Cost)
+        </dd>
+        <dt class="col-sm-2">
+            Изображение
+        </dt>
+        <dd class="col-sm-10">
+            <img src="@Model.Item?.ImageURI" style="max-width:150px;"/>
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Item.Id" />
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-page="./Index">Вернуться к списку устройств</a>
+    </form>
+</div>

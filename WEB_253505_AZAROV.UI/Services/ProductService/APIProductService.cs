@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using WEB_253505_AZAROV.Domain.Entities;
 using WEB_253505_AZAROV.Domain.Models;
+using WEB_253505_AZAROV.UI.Services.FileService;
 
 namespace WEB_253505_AZAROV.UI.Services;
 public class APIProductService : IProductService
@@ -10,13 +11,16 @@ public class APIProductService : IProductService
     private string _pageSize;
     private JsonSerializerOptions _serializerOptions;
     private ILogger<APIProductService> _logger;
+    private readonly IFileService _fileService;
 
     public APIProductService(HttpClient httpClient,
         IConfiguration configuration,
-        ILogger<APIProductService> logger)
+        ILogger<APIProductService> logger, 
+        IFileService fileService)
     {
         _httpClient = httpClient;
         _pageSize = configuration.GetSection("ItemsPerPage").Value!;
+        _fileService = fileService;
         _serializerOptions = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
@@ -25,6 +29,14 @@ public class APIProductService : IProductService
     }
     public async Task<ResponseData<Item>> CreateProductAsync(Item product, IFormFile? formFile)
     {
+        if (formFile != null)
+        {
+            var imageUrl = await _fileService.SaveFileAsync(formFile);
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                product.ImageURI = imageUrl;
+            }
+        }
         var uri = new Uri(_httpClient.BaseAddress!.AbsoluteUri + "items/");
         var response = await _httpClient.PostAsJsonAsync(uri, product, _serializerOptions);
         if (response.IsSuccessStatusCode)
@@ -39,14 +51,37 @@ public class APIProductService : IProductService
         return ResponseData<Item>.Error($"Объект не добавлен. Error: {response.StatusCode.ToString()}");
     }
 
-    public Task DeleteProductAsync(int id)
+    public async Task DeleteProductAsync(int id)
     {
-        throw new NotImplementedException();
+        var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"items/{id}");
+        var response = await _httpClient.DeleteAsync(uri);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError($"-----> Object not deleted. Error:{response.StatusCode}");
+        }
     }
 
-    public Task<ResponseData<Item>> GetProductByIdAsync(int id)
+    public async Task<ResponseData<Item>> GetProductByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"items/{id}");
+        var response = await _httpClient.GetAsync(uri);
+        if (response.IsSuccessStatusCode)
+        {
+            try
+            {
+                var responseData = await response.Content
+                                     .ReadFromJsonAsync<ResponseData<Item>>(_serializerOptions);
+                return responseData!;
+
+            }
+            catch (JsonException ex)
+            {
+                _logger.LogError($"-----> Error: {ex.Message}");
+                return ResponseData<Item>.Error($"Error: {ex.Message}");
+            }
+        }
+        _logger.LogError($"-----> Can't get device with id={id}. Error:{response.StatusCode}");
+        return ResponseData<Item>.Error($"Can't get device with id={id}. Error:{response.StatusCode}");
     }
 
     public async Task<ResponseData<ListModel<Item>>> GetProductListAsync(string? categoryNormalizedName, int pageNo = 1)
@@ -103,8 +138,22 @@ public class APIProductService : IProductService
             .Error($"Данные не получены от сервера. Error: {response.StatusCode.ToString()}");
     }
 
-    public Task UpdateProductAsync(int id, Item product, IFormFile? formFile)
+    public async Task UpdateProductAsync(int id, Item item, IFormFile? formFile)
     {
-        throw new NotImplementedException();
+        if (formFile != null)
+        {
+            var imageUrl = await _fileService.SaveFileAsync(formFile);
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                await _fileService.DeleteFileAsync(item.ImageURI!);
+                item.ImageURI = imageUrl;
+            }
+        }
+        var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"Items/{id}");
+        var response = await _httpClient.PutAsJsonAsync(uri, item);
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError($"-----> Object not updated. Error:{response.StatusCode}");
+        }
     }
 }

@@ -1,0 +1,70 @@
+﻿@page
+@model WEB_253505_AZAROV.UI.Areas.Admin.Pages.IndexModel
+@{
+  ViewData["Title"] = "Index";
+}
+<h1>Админ панель</h1>
+
+<p>
+    <a class="btn btn-primary"
+       asp-page="Create">
+        <i class="fa-solid fa-plus"></i> Добавить устройство
+    </a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                Описание
+            </th>
+            <th>
+                Цена
+            </th>
+            <th>
+                Изображение
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Description
+            </td>
+            <td>
+                @item.Cost
+            </td>
+            <td>
+                <img src="@item.ImageURI" style="max-width:150px;">
+            </td>
+            <td>
+                <a class="btn btn-success"
+                   asp-page="./Edit" 
+                   asp-route-id="@item.Id">
+                    <i class="fas fa-edit"></i> Изменить
+                </a>
+
+                <a class="btn btn-info" 
+                   asp-page="./Details" 
+                   asp-route-id="@item.Id">
+                    <i class="fa-solid fa-info"></i> Подробнее
+                </a>
+
+                <a class="btn btn-danger" 
+                   asp-page="./Delete" 
+                   asp-route-id="@item.Id">
+                    <i class="fa-regular fa-trash-can"></i> Удалить
+                </a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
