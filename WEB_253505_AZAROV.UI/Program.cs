@@ -8,6 +8,8 @@ using WEB_253505_AZAROV.UI.Services;
 using WEB_253505_AZAROV.UI.Services.FileService;
 using WEB_253505_AZAROV.UI.HelperClasses;
 using WEB_253505_AZAROV.UI.Services.Authentication;
+using WEB_253505_AZAROV.Domain.Cart;
+using WEB_253505_AZAROV.UI.Services.CartService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,10 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddHttpClient<ITokenAccessor, KeycloakTokenAccessor>();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,6 +68,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseSession();
 
 app.UseRouting();
 

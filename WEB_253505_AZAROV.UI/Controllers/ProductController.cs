@@ -14,7 +14,7 @@ public class ProductController : Controller
         _categoryService = categoryService;
         _logger = logger;
     }
-    public async Task<ActionResult> Index([FromQuery] string? category, [FromQuery] int pageNo = 1)
+    public async Task<ActionResult> Index(string? category, [FromQuery] int pageNo = 1)
     {
         var _categories = _categoryService.GetCategoryListAsync().Result.Data!;
         var productResponse =
