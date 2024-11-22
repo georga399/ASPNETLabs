@@ -52,47 +52,17 @@
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-
-    @foreach (var item in Model.Items)
-    {
-         <div class="col">
-             <div class="card">
-                <div class="card-body">
-                    <img src="@item.ImageURI" class="card-img-top" alt="@item.Name">
-                    <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text">@item.Description</p>
-                    <p class="card-text">@item.Cost.ToString("C")</p>
-                    <form asp-controller="Cart" asp-action="Add" method="get">
-                        <input type="hidden" name="id" value=@item.Id />
-                        <input type="hidden" name="returnUrl" value="@returnUrl" />
-                        <button type="submit" class="btn btn-primary">Add to cart</button>
-                    </form>
-                </div>
-             </div>
-         </div>
-    }
+    <div class="col-10" id="catalog">
+            @{
+                await Html.RenderPartialAsync("_PaginationPartial", new
+                {
+                    CurrentCategory = category,
+                    ReturnUrl = returnUrl,
+                    CurrentPage = Model.CurrentPage,
+                    TotalPages = Model.TotalPages,
+                    Items = Model.Items,
+                    Admin = false
+                });
+            }
     </div>
 }
-@{
-}
-<nav aria-label="Page navigation example">
-  <ul class="pagination">
-    <li class="page-item">
-        <a class="page-link" asp-controller="product" asp-route-category="@category" asp-route-pageno="@prev" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-        </a>
-    </li>
-    @for (int i = 1; i <= Model.TotalPages; i++)
-    {
-        <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-            <a class="page-link" asp-controller="product" asp-route-category="@category" asp-route-pageno="@i">@i</a>
-        </li>
-    }
-    <li class="page-item">
-        <a class="page-link" asp-controller="product" asp-route-category="@category" asp-route-pageno="@next" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-        </a>
-    </li>
-  </ul>
-</nav>
