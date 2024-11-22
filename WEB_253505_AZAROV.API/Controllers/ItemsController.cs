@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,6 +19,7 @@ public class ItemsController : ControllerBase
 
     [HttpGet]
     [HttpGet("{category}")]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<Item>>> GetItems(string? category,
                                             [FromQuery] int pageNo = 1,
                                             [FromQuery] int pageSize = 3)
@@ -29,6 +31,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [Authorize]
     public async Task<ActionResult<Item>> GetItem(int id)
     {
         var item = await _productService.GetProductByIdAsync(id);
@@ -39,6 +42,7 @@ public class ItemsController : ControllerBase
         return Ok(item);
     }
     [HttpDelete("{id:int}")]
+    [Authorize(Policy="admin")]
     public async Task<ActionResult> DeleteItem(int id)
     {
         await _productService.DeleteProductAsync(id);
@@ -46,6 +50,7 @@ public class ItemsController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy="admin")]
     public async Task<ActionResult<Item>> CreateItem(Item item)
     {
         var response = await _productService.CreateProductAsync(item);
@@ -55,7 +60,9 @@ public class ItemsController : ControllerBase
         }
         return Ok(response);
     }
+
     [HttpPut("{id:int}")]
+    [Authorize(Policy="admin")]
     public async Task<ActionResult<Item>> UpdateItem(int id, Item item)
     {
         await _productService.UpdateProductAsync(id, item);

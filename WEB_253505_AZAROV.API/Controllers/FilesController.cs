@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WEB_253505_AZAROV.API.Controllers
 {
@@ -38,6 +39,7 @@ namespace WEB_253505_AZAROV.API.Controllers
         }
 
         [HttpDelete("{fileName}")]
+        [Authorize]
         public IActionResult DeleteFile(string fileName) 
         {
             var filePath = Path.Combine(_imagePath, fileName);

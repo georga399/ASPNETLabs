@@ -12,11 +12,13 @@ public class APIProductService : IProductService
     private JsonSerializerOptions _serializerOptions;
     private ILogger<APIProductService> _logger;
     private readonly IFileService _fileService;
+    private readonly ITokenAccessor _tokenAccessor;
 
     public APIProductService(HttpClient httpClient,
         IConfiguration configuration,
         ILogger<APIProductService> logger, 
-        IFileService fileService)
+        IFileService fileService,
+        ITokenAccessor tokenAccessor)
     {
         _httpClient = httpClient;
         _pageSize = configuration.GetSection("ItemsPerPage").Value!;
@@ -26,6 +28,7 @@ public class APIProductService : IProductService
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         _logger = logger;
+        _tokenAccessor = tokenAccessor;
     }
     public async Task<ResponseData<Item>> CreateProductAsync(Item product, IFormFile? formFile)
     {
@@ -38,6 +41,7 @@ public class APIProductService : IProductService
             }
         }
         var uri = new Uri(_httpClient.BaseAddress!.AbsoluteUri + "items/");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.PostAsJsonAsync(uri, product, _serializerOptions);
         if (response.IsSuccessStatusCode)
         {
@@ -54,6 +58,7 @@ public class APIProductService : IProductService
     public async Task DeleteProductAsync(int id)
     {
         var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"items/{id}");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.DeleteAsync(uri);
         if (!response.IsSuccessStatusCode)
         {
@@ -64,6 +69,7 @@ public class APIProductService : IProductService
     public async Task<ResponseData<Item>> GetProductByIdAsync(int id)
     {
         var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"items/{id}");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.GetAsync(uri);
         if (response.IsSuccessStatusCode)
         {
@@ -115,6 +121,7 @@ public class APIProductService : IProductService
         }
         
         // отправить запрос к API
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.GetAsync(
             new Uri(urlString.ToString()));
         if(response.IsSuccessStatusCode)
@@ -150,6 +157,7 @@ public class APIProductService : IProductService
             }
         }
         var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"Items/{id}");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.PutAsJsonAsync(uri, item);
         if (!response.IsSuccessStatusCode)
         {

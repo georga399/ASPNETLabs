@@ -10,10 +10,12 @@ public class APICategoryService : ICategoryService
     private HttpClient _httpClient;
     private JsonSerializerOptions _serializerOptions;
     private ILogger<APICategoryService> _logger;
+    private readonly ITokenAccessor _tokenAccessor;
+
 
     public APICategoryService(HttpClient httpClient,
         IConfiguration configuration,
-        ILogger<APICategoryService> logger)
+        ILogger<APICategoryService> logger, ITokenAccessor tokenAccessor)
     {
         _httpClient = httpClient;
         _serializerOptions = new JsonSerializerOptions()
@@ -21,11 +23,13 @@ public class APICategoryService : ICategoryService
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         _logger = logger;
+        _tokenAccessor = tokenAccessor;
     }
     public async Task<ResponseData<List<Category>>> GetCategoryListAsync()
     {
         var urlString
             = new StringBuilder($"{_httpClient.BaseAddress!.AbsoluteUri}categories/");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.GetAsync(
             new Uri(urlString.ToString()));
         if(response.IsSuccessStatusCode)

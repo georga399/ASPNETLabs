@@ -6,11 +6,13 @@ public class APIFileService: IFileService
 {
   private readonly HttpClient _httpClient;
     private readonly ILogger<APIFileService> _logger;
+    private readonly ITokenAccessor _tokenAccessor;
 
-    public APIFileService(HttpClient httpClient, ILogger<APIFileService> logger)
+    public APIFileService(HttpClient httpClient, ILogger<APIFileService> logger, ITokenAccessor tokenAccessor)
     {
         _httpClient = httpClient;
         _logger = logger;
+        _tokenAccessor = tokenAccessor;
     }
 
     public async Task<string> SaveFileAsync(IFormFile formFile)
@@ -29,6 +31,7 @@ public class APIFileService: IFileService
 
         request.Content = content;
 
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.SendAsync(request);
         if (response.IsSuccessStatusCode)
         {
@@ -41,6 +44,7 @@ public class APIFileService: IFileService
     public async Task DeleteFileAsync(string fileName)
     {
         var uri = new Uri(_httpClient.BaseAddress?.AbsoluteUri + $"/{fileName.Split('/').Last()}");
+        await _tokenAccessor.SetAuthorizationHeaderAsync(_httpClient);
         var response = await _httpClient.DeleteAsync(uri);
         if (!response.IsSuccessStatusCode)
         {

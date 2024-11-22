@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using WEB_253505_AZAROV.API.Models;
 using WEB_253505_AZAROV.API.Data;
 using WEB_253505_AZAROV.API.Services;
 
@@ -13,6 +15,21 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+var authServer = builder.Configuration.GetSection("AuthServer")
+                                      .Get<AuthServerData>();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
+                {
+                    opt.MetadataAddress = $"{authServer!.Host}/realms/{authServer.Realm}/.well-known/openid-configuration";
+                    opt.Authority = $"{authServer.Host}/realms/{authServer.Realm}";
+                    opt.Audience = "account";
+                    opt.RequireHttpsMetadata = false;
+                });
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
+});
 
 var app = builder.Build();
 
@@ -30,6 +47,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.MapControllers();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 await DbInitializer.SeedData(app);
 
