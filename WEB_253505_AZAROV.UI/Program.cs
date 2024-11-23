@@ -10,6 +10,8 @@ using WEB_253505_AZAROV.UI.HelperClasses;
 using WEB_253505_AZAROV.UI.Services.Authentication;
 using WEB_253505_AZAROV.Domain.Cart;
 using WEB_253505_AZAROV.UI.Services.CartService;
+using Serilog;
+using WEB_253505_AZAROV.UI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +58,12 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 
+
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -72,7 +80,9 @@ app.UseSession();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<LoggingMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
