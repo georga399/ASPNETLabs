@@ -7,12 +7,10 @@ public class ProductController : Controller
 {
     private readonly IProductService _productService;
     private readonly ICategoryService _categoryService;
-    private ILogger<ProductController> _logger;
-    public ProductController(IProductService productService, ICategoryService categoryService, ILogger<ProductController> logger) 
+    public ProductController(IProductService productService, ICategoryService categoryService) 
     {
         _productService = productService;
         _categoryService = categoryService;
-        _logger = logger;
     }
     public async Task<ActionResult> Index(string? category, [FromQuery] int pageNo = 1)
     {
