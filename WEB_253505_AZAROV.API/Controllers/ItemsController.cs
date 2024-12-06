@@ -19,7 +19,7 @@ public class ItemsController : ControllerBase
 
     [HttpGet]
     [HttpGet("{category}")]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<IEnumerable<Item>>> GetItems(string? category,
                                             [FromQuery] int pageNo = 1,
                                             [FromQuery] int pageSize = 3)

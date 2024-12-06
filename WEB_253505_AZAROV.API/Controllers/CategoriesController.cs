@@ -18,7 +18,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    // [Authorize]
     public async Task<ActionResult<IEnumerable<Category>>> GetCategories()
     {
         return Ok(await _categoryService.GetCategoryListAsync());

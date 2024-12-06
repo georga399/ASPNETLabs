@@ -1,0 +1,36 @@
+@inject IDataService DataService
+
+<style>
+	.rounded-custom {
+		border-radius: 15px;
+	}
+</style>
+
+@if (SelectedItem is not null)
+{
+	<div class="card rounded-custom mb-3" style="max-width: fit-content;">
+		<div class="card-header">
+			@if (!string.IsNullOrEmpty(SelectedItem.ImageURI))
+			{
+				<img src="@SelectedItem.ImageURI" class="card-img-top" alt="Device image" style="max-width:300px;" />
+			}
+		</div>
+		<div class="card-body">
+			<h2>@SelectedItem.Name</h2>
+			<p>@SelectedItem.Description</p>
+			<h3>Price: @SelectedItem.Cost BYN</h3>
+		</div>
+	</div>
+}
+
+
+@code {
+
+	[Parameter]
+	public Item SelectedItem { get; set; }
+
+	protected override void OnInitialized()
+	{
+
+	}
+}

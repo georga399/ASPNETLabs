@@ -1,0 +1,27 @@
+﻿@page "/items"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization;
+
+<PageTitle>Items</PageTitle>
+<CategorySelector/>
+<ItemsList OnItemSelected="OnItemSelected"/>
+<Pager/>
+<ItemInfo SelectedItem="SelectedItem"/>
+
+@code {
+    [Inject]
+    public IDataService DataService{ get; set; }
+
+    Item SelectedItem { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await DataService.GetProductListAsync();
+    }
+
+    void OnItemSelected(int id)
+    {
+        SelectedItem = DataService.Items.FirstOrDefault(d => d.Id == id);
+        StateHasChanged();
+    }
+}

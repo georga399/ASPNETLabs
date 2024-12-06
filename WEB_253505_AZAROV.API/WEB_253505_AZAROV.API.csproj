@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WEB_253505_AZAROV.Domain\WEB_253505_AZAROV.Domain.csproj" />
+    <ProjectReference Include="..\WEB_253505_AZAROV.UI\WEB_253505_AZAROV.UI.csproj" />
   </ItemGroup>
 
 </Project>

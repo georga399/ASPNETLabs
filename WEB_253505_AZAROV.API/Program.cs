@@ -31,6 +31,11 @@ builder.Services.AddAuthorization(opt =>
     opt.AddPolicy("admin", p => p.RequireRole("POWER-USER"));
 });
 
+builder.Services.AddCors(opt => opt.AddPolicy("WasmClient",
+    builder => builder.WithOrigins("http://localhost:5001")
+                      .AllowAnyMethod()
+                      .AllowAnyHeader()));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -50,6 +55,8 @@ app.MapControllers();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseCors("WasmClient");
+
 
 await DbInitializer.SeedData(app);
 

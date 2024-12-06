@@ -1,0 +1,46 @@
+@inject IDataService DataService
+
+<div class="row">
+    <div class="dropdown col-md-3">
+        <select class="form-control" @onchange="OnCategoryChangedHandler">
+            <option value="all">Все</option>
+            @foreach (var category in CategoryList)
+            {
+                <option value="@category.NormalizedName">@category.Name</option>
+            }
+        </select>
+    </div>
+</div>
+
+@code {
+    private List<Category> CategoryList = new List<Category>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        DataService.DataLoaded += StateHasChanged;
+
+        await DataService.GetCategoryListAsync();
+        CategoryList = DataService.Categories;
+    }
+
+    private bool IsSelectedCategory(Category category)
+    {
+        return DataService.SelectedCategory?.NormalizedName == category.NormalizedName;
+    }
+
+    public void OnCategoryChangedHandler(ChangeEventArgs e)
+    {
+        var selectedNormalizedName = e.Value.ToString();
+
+        if (selectedNormalizedName == "all")
+        {
+            selectedNormalizedName = null;
+        }
+
+        var selectedCategory = CategoryList.FirstOrDefault(c => c.NormalizedName == selectedNormalizedName);
+
+        DataService.SelectedCategory = selectedCategory;
+
+        DataService.GetProductListAsync();
+    }
+}
