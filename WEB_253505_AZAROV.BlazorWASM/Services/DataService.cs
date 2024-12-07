@@ -10,8 +10,9 @@ internal class DataService : IDataService
     private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _jsonSerializerOptions;
     private readonly IAccessTokenProvider _accessTokenProvider;
+    private readonly ILogger<DataService> _logger;
     private readonly string _pageSize;
-    public DataService(HttpClient httpClient, IConfiguration configuration, IAccessTokenProvider accessTokenProvider)
+    public DataService(HttpClient httpClient, IConfiguration configuration, IAccessTokenProvider accessTokenProvider, ILogger<DataService> logger)
     {
         _httpClient = httpClient;
         _pageSize = configuration.GetSection("ItemsPerPage").Value;
@@ -20,6 +21,7 @@ internal class DataService : IDataService
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         _accessTokenProvider = accessTokenProvider;
+        _logger = logger;
     }
     private async Task<string> GetJwtTokenAsync()
     {
@@ -43,7 +45,12 @@ internal class DataService : IDataService
         var urlString = $"{_httpClient.BaseAddress.AbsoluteUri}Categories";
         try
         {
-            var response = await _httpClient.GetAsync(new Uri(urlString));
+            var token = await GetJwtTokenAsync();
+            _logger.LogError(token);
+            var request = new HttpRequestMessage(HttpMethod.Get, urlString);
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+            var response = await _httpClient.SendAsync(request);
             if (!response.IsSuccessStatusCode)
             {
                 Success = false;
@@ -67,6 +74,7 @@ internal class DataService : IDataService
     }
     public async Task GetProductListAsync(int pageNo = 1)
     {
+        var urlString = $"{_httpClient.BaseAddress.AbsoluteUri}items";
         try
         {
             var route = new StringBuilder($"{_httpClient.BaseAddress.AbsoluteUri}items/");
@@ -93,9 +101,10 @@ internal class DataService : IDataService
             }
 
             var token = await GetJwtTokenAsync();
-        
             var request = new HttpRequestMessage(HttpMethod.Get, route.ToString());
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             var response = await _httpClient.SendAsync(request);
+
             if (!response.IsSuccessStatusCode)
             {
                 Success = false;
